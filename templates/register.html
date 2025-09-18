@@ -1,0 +1,54 @@
+{% extends "./Layouts/base.html" %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+{% include './Layouts/navbar.html' %}
+
+
+<h1>Register</h1>
+<div class="row">
+<div class="row">
+<div class="col-4">
+    
+</div>
+<div class="col-4">
+  <form method="POST" action="/register">
+    <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input type="text" class="form-control" name="username" id="username" aria-describedby="userHelp" required>
+        <div id="userHelp" class="form-text">Please create a uique username</div>
+      </div>
+    <div class="mb-3">
+      <label for="username" class="form-label">Fullname</label>
+      <input type="text" class="form-control" name="fullname" id="fullname" aria-describedby="userHelp" required>
+    </div>
+    <div class="mb-3">
+      <label for="email" class="form-label">Email</label>
+      <input type="text" class="form-control" name="email" id="email" aria-describedby="userHelp" required>
+      <div id="userHelp" class="form-text">We'll never share your username with anyone else.</div>
+    </div>
+    <div class="mb-3">
+      <label for="pwd" class="form-label">Password</label>
+      <input type="password" name="password" class="form-control" id="password" required>
+    </div>
+    <div class="mb-3">
+        <label for="pwd" class="form-label">Confirm Password</label>
+        <input type="password" name="cpassword" class="form-control" id="password" required>
+      </div>
+      <div class=row>
+        <div class="col-5">
+        </div>
+        <div class="col-2">
+          <button type="submit" class="btn btn-warning">Register</button>
+        </div>
+        <div class="col-5">
+        </div>
+      </row>
+  </form>
+</div>
+<div class="col-4">
+</div>
+</div>
+</div>
+  
+{% endblock %}

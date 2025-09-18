@@ -1,0 +1,95 @@
+{% extends "./Layouts/base.html" %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+{% include './Layouts/navbar.html' %}
+<p></p>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="row mb-3">
+                <form class="d-flex ms-auto" style="width: 300px" action="/find/a">
+                    <input
+                        class="form-control me-2"
+                        type="search"
+                        placeholder="Search"
+                        aria-label="Search"
+                        name="influencersearch"
+                    >
+                    <button class="btn btn-warning" type="submit">Users</button>
+                </form>
+            </div>
+            {% if influencerlist %}
+            <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                <table class="table table-bordered table-striped">
+                    <thead class="table-light" style="position: sticky; top: 0; z-index: 1;">
+                        <tr class="text-center">
+                            <th>Username</th>
+                            <th>Fullname</th>
+                            <th>UserType</th>
+                            <th>Email</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for influencer in influencerlist %}
+                        <tr class="text-center">
+                            <td>{{influencer.username}}</td>
+                            <td>{{influencer.fullname}}</td>
+                            <td>{{influencer.usertype}}</td>
+                            <td>{{influencer.email}}</td>
+            
+                               
+                            <td> <button type="button" class="btn btn-warning" data-bs-toggle="modal"
+                                data-bs-target="#userreport{{influencer.username}}" data-bs-whatever="@mdo">Take Action</button>
+        
+                            <div class="modal fade" id="userreport{{influencer.username}}" tabindex="-1"
+                                aria-labelledby="createModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content text-start">
+                                        <form action="/admin/flag/users" method="POST">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="createModalLabel">Actions</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <input type="hidden" name="username" value="{{influencer.username}}">
+                                                <div class="col-12">
+                                                    <label for="user" class="form-label">Username</label>
+                                                    <input type="text" class="form-control" id="username" name="username"
+                                                        value="{{ influencer.username }}" readonly>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label for="campaignaction" class="form-label">Select Action</label>
+                                                    <select id="campaignaction" class="form-select" name="action">
+                                                        <option value="Removeflag">Remove Flag</option>
+                                                        <option value="blacklist">Blacklist</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label for="reason" class="form-label">Reason</label>
+                                                    <textarea class="form-control" id="reason" name="reason"
+                                                        rows="3"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-warning">Take Action</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

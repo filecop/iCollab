@@ -1,0 +1,50 @@
+{% extends "./Layouts/base.html" %}
+{% block content %}
+{% include './Layouts/navbar.html' %}
+
+<div class="container-fluid">
+    <div class="row justify-content-center mt-4">
+        <div class="col-4 text-center">
+            <h5>Users</h5>
+            <h6>Sponsors:{{sponsorscount }}</h6> <h6>Influencer:{{influencerscount }}</h6> 
+        </div>
+        <div class="col-4 text-center">
+            <h5>Blacklisted</h5>
+            <h6>Users:{{usersblacklisted }}</h6> <h6>Campaigns:{{campblacklisted }}</h6> 
+        </div>
+    </div>
+    <div class="row">
+        <div class="row justify-content-center mt-4">
+            <div class="col-4 text-center">
+                <h4>Total Budget Spent (₹)</h4>
+                <h2>{{ totalearning }}</h2>
+            </div>
+    
+            <div class="col-4 text-center">
+                <h4>Total Audience Reach</h4>
+                <h2>{{ totalviews }}</h2>
+            </div>
+
+            <div class="col-4 text-center">
+                <h4>Total Number of Ads</h4>
+                <h2>{{ totaladrequests }}</h2>
+            </div>            
+        </div>
+
+        <br><br><br><br>
+
+        <div class="col-4">
+            <img src="{{ url_for('static', filename='img/graphs/agraph1.jpg') }}" alt="" class="img-fluid">
+        </div>
+
+        <div class="col-4">
+            <img src="{{ url_for('static', filename='img/graphs/agraph2.jpg') }}" alt="" class="img-fluid">
+        </div>
+        
+        <div class="col-4">
+            <img src="{{ url_for('static', filename='img/graphs/agraph3.jpg') }}" alt="" class="img-fluid">
+        </div>
+    </div>
+</div>
+
+{% endblock %}

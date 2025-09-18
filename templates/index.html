@@ -1,0 +1,38 @@
+{%extends './Layouts/base.html'%}
+{%block title%}Welcome to iCollab{%endblock%}
+{%block content%}{%include './Layouts/navbar.html'%}
+<div class="card bg-dark text-white">
+    <img src="./static/img/inf.svg" class="card-img" alt="...">
+    <div class="card-img-overlay" style=width:100%>
+      <h5 class="card-title">iCollab</h5>
+      <!-- <div class=row>
+        <div class="col-5">
+        </div>
+        <div class="col-2">
+            <p class="card-text"><p>Home to some of the amazing influencers and sponsors around the globe. We have been trusted with 10M+ users. Please register to explore more.</p>
+        </p>
+        <p class="card-text">Last updated 3 mins ago</p>
+        </div>
+        <div class="col-5">
+        </div>
+      </row> -->
+      <div class="row">
+          <div class="card text-dark bg-warning mb-3">
+            <div class="card-body">
+              <p class="card-text">Home to some of the amazing influencers and sponsors around the globe. We have been trusted with 10M+ users. Please register to explore more.</p>
+            </p>
+            </div>
+          </div>
+          <div class=row>
+            <div class="col-5">
+            </div>
+            <div class="col-2">
+                <a href="/login" class="btn btn-warning">Let's Go</a>
+            </div>
+            <div class="col-5">
+            </div>
+          </row>
+    </div>
+  </div>
+
+{%endblock%}

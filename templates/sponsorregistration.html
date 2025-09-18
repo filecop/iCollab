@@ -1,0 +1,57 @@
+{% extends "./Layouts/base.html" %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+{% include './Layouts/navbar.html' %}
+
+
+<h1>Sponsor Register</h1>
+<div class="row">
+<div class="row">
+<div class="col-4">
+</div>
+<div class="col-4">
+    <div id="container">
+        <div id="panel">
+            <div id="input-form">
+                <h1>Sponsor Register</h1>
+                <form method="POST" action="/influencer/register">
+                    <div class="mb-3">
+                      <label for="username" class="form-label">Username</label>
+                      <input type="text" class="form-control" name="username" id="username" aria-describedby="userHelp" required>
+                      <div id="userHelp" class="form-text">We'll never share your username with anyone else.</div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="pwd" class="form-label">Password</label>
+                      <input type="password" name="password" class="form-control" id="pwd" required>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" name="industries" type="checkbox" value="" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                          None
+                        </label>
+                      </div>
+                    {%for i in industries%}
+                    <div class="form-check">
+                        <input class="form-check-input" name="industries" type="checkbox" value="{{i.industryname}}" id="{{i.index}}">
+                        <label class="form-check-label" for="flexCheckChecked">
+                          {{i.industryname}}
+                        </label>
+                      </div>
+                    {%endfor%}
+                    <br><br>
+                    <div class=row>
+                        <div class="col-5"></div>
+                        <div class="col-2"><button type="submit" class="btn btn-warning">Register</button></div>
+                        <div class="col-5"></div>
+                        </div>  
+                  </form>
+            </div>
+        </div>
+    </div>
+<div class="col-4">
+</div>
+</div>
+</div>
+  
+{% endblock %}

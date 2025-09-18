@@ -1,0 +1,301 @@
+<h6>Negotiations:</h6>
+<div style="width: 100%; max-height: 400px; overflow-y: auto; display: block">
+    <table class="table" border-collapse: collapse>
+        <thead class="table-light" style="position: sticky; top: 0; z-index: 1">
+            <tr class="text-center">
+                <th>Campaign Name</th>
+                <th>Category</th>
+                <th>Ad Title</th>
+                <th>Ad Budget</th>
+                <th>Target</th>
+                <th>Status</th>
+                <th>Negotiating</th>
+                <th>Negotiate</th>
+                <th>Accept</th>
+                <th>Reject</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for negotiation in negotiations %}
+            <tr class="text-center">
+                <td>{{negotiation.adrequests.campaigns.campaignname}}</td>
+                <td>{{negotiation.adrequests.campaigns.cate.categoryname}}</td>
+                <td>{{negotiation.adrequests.adtitle}}</td>
+                <td>{{negotiation.adbudget}}</td>
+                <td>{{negotiation.adtargetreach}}</td>
+                <td>{{negotiation.negotiationstatus}}</td>
+                <td>{{negotiation.influencers.influencerusername}}</td>
+                <td>{% if negotiation.negotiationstatus == 'Confirmed' or negotiation.negotiationstatus ==
+                    'Declined'%}<button type="button" class="btn btn-primary position-relative" disabled
+                        data-bs-toggle="modal" data-bs-target="#request{{negotiation.negotiationid}}"
+                        data-bs-whatever="@mdo">{{negotiation.negotiationstatus}}
+
+                    </button>{% elif negotiation.lastmodifiedby == userinfo.userid and negotiation.negotiationstatus !=
+                    'In Progress'%}<button type="button" class="btn btn-primary position-relative" disabled
+                        data-bs-toggle="modal" data-bs-target="#request{{negotiation.negotiationid}}"
+                        data-bs-whatever="@mdo">Frozen
+
+                    </button>
+                    </button>{% elif negotiation.lastmodifiedby != userinfo.userid and negotiation.negotiationstatus ==
+                    'In Progress'%}<button type="button" class="btn btn-primary position-relative"
+                        data-bs-toggle="modal" data-bs-target="#request{{negotiation.negotiationid}}"
+                        data-bs-whatever="@mdo">New Terms
+                        <span
+                            class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle">
+                            <span class="visually-hidden">New alerts</span>
+                        </span>
+                    </button>{%else%}
+                    <button type="button" class="btn btn-info" data-bs-toggle="modal"
+                        data-bs-target="#request{{negotiation.negotiationid}}"
+                        data-bs-whatever="@mdo">Modify</button>{%endif%}
+
+                    <div class="modal fade" id="request{{negotiation.negotiationid}}" tabindex="-1"
+                        aria-labelledby="createModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content text-start">
+                                <form action="/negotiations/modify/{{negotiation.negotiationid}}" method="POST">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="createModalLabel">Modify Request</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row g-3">
+                                            <input type="hidden" name="adrequestid"
+                                                value="{{ negotiation.adrequestid }}">
+                                            <div class="col-md-4">
+                                                <label for="negotiationtitle" class="form-label">Ad Id</label>
+                                                <input type="text" class="form-control" id="adrequestid" name="adreq"
+                                                    value={{negotiation.adrequestid}} disabled>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <label for="negotiationtitle" class="form-label">Ad Title</label>
+                                                <input type="text" class="form-control" id="adtitle" name="adtitle"
+                                                    value={{negotiation.adrequests.adtitle}} disabled>
+                                            </div>
+                                            <div class="col-12">
+                                                <label for="adgoal" class="form-label">Requirement</label>
+                                                <textarea class="form-control" id="adrequirement" name="adrequirement"
+                                                    rows="3">{{negotiation.adrequirement}}</textarea>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <label for="adgoal" class="form-label">Goal</label>
+                                                <input type="text" class="form-control" id="adgoal" name="adgoal"
+                                                    value="{{negotiation.adgoal}}">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="target" class="form-label">Target</label>
+                                                <input type="text" class="form-control" id="targetedreach"
+                                                    name="adtargetreach" value="{{negotiation.adtargetreach}}">
+                                            </div>
+                                            <div class="col-md-8">
+                                                <label for="campaigntargetaudience"
+                                                    class="form-label">Influencer</label>
+                                                <select id="inputState" class="form-select" name="influencerid"
+                                                    disabled>
+                                                    <option>Select</option>
+                                                    {% for influencer in influencerlist %}
+                                                    <option value="{{ influencer.influencerid }}" {% if
+                                                        influencer.influencerid==negotiation.influencerid %}selected{%
+                                                        endif %}>
+                                                        {{ influencer.influencerusername }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label for="campaignbudget" class="form-label">Budget(₹)</label>
+                                                <input type="text" class="form-control" id="adbudget" name="adbudget"
+                                                    value="{{negotiation.adbudget}}">
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-warning">Send Request</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                </td>
+                <td>{% if negotiation.negotiationstatus == 'Confirmed' or negotiation.negotiationstatus =='Declined' or
+                    negotiation.negotiationstatus == 'Rejected' or (negotiation.lastmodifiedby == userinfo.userid and negotiation.negotiationstatus == 'Accepted')%}<button
+                        type="button" class="btn btn-success" disabled data-bs-toggle="modal"
+                        data-bs-target="#requestaccept{{negotiation.negotiationid}}"
+                        data-bs-whatever="@mdo">Accept</button> {% elif negotiation.lastmodifiedby == userinfo.userid
+                    and negotiation.negotiationstatus == 'In Progress'%}
+                    <button type="button" class="btn btn-success" disabled data-bs-toggle="modal"
+                        data-bs-target="#requestaccept{{negotiation.negotiationid}}"
+                        data-bs-whatever="@mdo">Accept</button>{%else%}
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                        data-bs-target="#requestaccept{{negotiation.negotiationid}}"
+                        data-bs-whatever="@mdo">Accept</button>{%endif%}
+                    <div class="modal fade" id="requestaccept{{negotiation.negotiationid}}" tabindex="-1"
+                        aria-labelledby="createModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content text-start">
+                                <form action="/negotiations/accept/{{negotiation.negotiationid}}" method="POST">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="createModalLabel">Accept Request</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row g-3">
+                                            <input type="hidden" name="adrequestid"
+                                                value="{{ negotiation.adrequestid }}">
+                                            <div class="col-md-4">
+                                                <label for="negotiationtitle" class="form-label">Ad Id</label>
+                                                <input type="text" class="form-control" id="adrequestid" name="adreq"
+                                                    value={{negotiation.adrequestid}} disabled>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <label for="negotiationtitle" class="form-label">Ad Title</label>
+                                                <input type="text" class="form-control" id="adtitle" name="adtitle"
+                                                    value={{negotiation.adrequests.adtitle}} disabled>
+                                            </div>
+                                            <div class="col-12">
+                                                <label for="adgoal" class="form-label">Requirement</label>
+                                                <textarea class="form-control" id="adrequirement" name="adrequirement"
+                                                    rows="3">{{negotiation.adrequirement}}</textarea>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <label for="adgoal" class="form-label">Goal</label>
+                                                <input type="text" class="form-control" id="adgoal" name="adgoal"
+                                                    value="{{negotiation.adgoal}}">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="target" class="form-label">Target</label>
+                                                <input type="text" class="form-control" id="targetedreach"
+                                                    name="adtargetreach" value="{{negotiation.adtargetreach}}">
+                                            </div>
+                                            <div class="col-md-8">
+                                                <label for="campaigntargetaudience"
+                                                    class="form-label">Influencer</label>
+                                                <select id="inputState" class="form-select" name="influencerid"
+                                                    disabled>
+                                                    <option>Select</option>
+                                                    {% for influencer in influencerlist %}
+                                                    <option value="{{ influencer.influencerid }}" {% if
+                                                        influencer.influencerid==negotiation.influencerid %}selected{%
+                                                        endif %}>
+                                                        {{ influencer.influencerusername }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label for="campaignbudget" class="form-label">Budget(₹)</label>
+                                                <input type="text" class="form-control" id="adbudget" name="adbudget"
+                                                    value="{{negotiation.adbudget}}">
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-warning">Accept</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                </td>
+                <td>{% if negotiation.negotiationstatus == 'Confirmed' or negotiation.negotiationstatus =='Declined' or
+                    (negotiation.lastmodifiedby == userinfo.userid and negotiation.negotiationstatus == 'Rejected')%}
+                    <button type="button" class="btn btn-danger" disabled data-bs-toggle="modal"
+                        data-bs-target="#requestreject{{negotiation.negotiationid}}"
+                        data-bs-whatever="@mdo">Reject</button>{% elif negotiation.lastmodifiedby == userinfo.userid and
+                    negotiation.negotiationstatus == 'In Progress'%}
+                    <button type="button" class="btn btn-danger" disabled data-bs-toggle="modal"
+                        data-bs-target="#requestreject{{negotiation.negotiationid}}"
+                        data-bs-whatever="@mdo">Reject</button>{% elif negotiation.lastmodifiedby == userinfo.userid and
+                    negotiation.negotiationstatus == 'Accepted'%}
+                    <button type="button" class="btn btn-danger" disabled data-bs-toggle="modal"
+                        data-bs-target="#requestreject{{negotiation.negotiationid}}"
+                        data-bs-whatever="@mdo">Reject</button>{% elif negotiation.lastmodifiedby != userinfo.userid and
+                            negotiation.negotiationstatus == 'Accepted'%}
+                            <button type="button" class="btn btn-danger" disabled data-bs-toggle="modal"
+                                data-bs-target="#requestreject{{negotiation.negotiationid}}"
+                                data-bs-whatever="@mdo">Reject</button>{%else%} <button type="button" class="btn btn-danger"
+                        data-bs-toggle="modal" data-bs-target="#requestreject{{negotiation.negotiationid}}"
+                        data-bs-whatever="@mdo">Reject</button>
+                    {%endif%}
+                    <div class="modal fade" id="requestreject{{negotiation.negotiationid}}" tabindex="-1"
+                        aria-labelledby="createModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content text-start">
+                                <form action="/negotiations/reject/{{negotiation.negotiationid}}" method="POST">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="createModalLabel">Reject Request</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row g-3">
+                                            <input type="hidden" name="adrequestid"
+                                                value="{{ negotiation.adrequestid }}">
+                                            <div class="col-md-4">
+                                                <label for="negotiationtitle" class="form-label">Ad Id</label>
+                                                <input type="text" class="form-control" id="adrequestid" name="adreq"
+                                                    value={{negotiation.adrequestid}} disabled>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <label for="negotiationtitle" class="form-label">Ad Title</label>
+                                                <input type="text" class="form-control" id="adtitle" name="adtitle"
+                                                    value={{negotiation.adrequests.adtitle}} disabled>
+                                            </div>
+                                            <div class="col-12">
+                                                <label for="adgoal" class="form-label">Requirement</label>
+                                                <textarea class="form-control" id="adrequirement" name="adrequirement"
+                                                    rows="3">{{negotiation.adrequirement}}</textarea>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <label for="adgoal" class="form-label">Goal</label>
+                                                <input type="text" class="form-control" id="adgoal" name="adgoal"
+                                                    value="{{negotiation.adgoal}}">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="target" class="form-label">Target</label>
+                                                <input type="text" class="form-control" id="targetedreach"
+                                                    name="adtargetreach" value="{{negotiation.adtargetreach}}">
+                                            </div>
+                                            <div class="col-md-8">
+                                                <label for="campaigntargetaudience"
+                                                    class="form-label">Influencer</label>
+                                                <select id="inputState" class="form-select" name="influencerid"
+                                                    disabled>
+                                                    <option>Select</option>
+                                                    {% for influencer in influencerlist %}
+                                                    <option value="{{ influencer.influencerid }}" {% if
+                                                        influencer.influencerid==negotiation.influencerid %}selected{%
+                                                        endif %}>
+                                                        {{ influencer.influencerusername }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label for="campaignbudget" class="form-label">Budget(₹)</label>
+                                                <input type="text" class="form-control" id="adbudget" name="adbudget"
+                                                    value="{{negotiation.adbudget}}">
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-warning">Reject</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

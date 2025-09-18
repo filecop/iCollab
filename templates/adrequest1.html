@@ -1,0 +1,258 @@
+{% extends "./Layouts/base.html" %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+{% include './Layouts/navbar.html' %}
+<p></p>
+<div class="row">
+    <div class="col-12">
+        {% include './adrequestChild.html' %}
+    </div>
+</div>
+
+<!-- <div class="row">
+    <div class="col-5">
+        <div class="col-6">
+            <h6>Messages</h6>
+            <ol class="list-group list-group-numbered">
+                {% for message in messages|sort(attribute='messagedate', reverse=True) %}
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold">
+                            {% if message.sender_user.userid == userinfo.userid %}
+                                {{ message.receiver_user.username }}
+                            {% else %}
+                                {{ message.sender_user.username }}
+                            {% endif %}
+                        </div>
+                        {{ message.message[0:10] }}
+                    </div>
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#messageModal{{ message.conversationid }}"
+                    >
+                        View
+                    </button>
+                    <div
+                        class="modal fade"
+                        id="messageModal{{ message.conversationid }}"
+                        tabindex="-1"
+                        aria-labelledby="messageModalLabel{{ message.conversationid }}"
+                        aria-hidden="true"
+                    >
+                        <div class="modal-dialog modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="messageModalLabel{{ message.conversationid }}">
+                                        {% if message.sender_user.userid == userinfo.userid %}
+                                            {{ message.receiver_user.username }}
+                                        {% else %}
+                                            {{ message.sender_user.username }}
+                                        {% endif %}
+                                    </h5>
+                                    <button
+                                        type="button"
+                                        class="btn-close"
+                                        data-bs-dismiss="modal"
+                                        aria-label="Close"
+                                    ></button>
+                                </div>
+                                <div class="modal-body">
+                                    {% for msg in messages if msg.conversationid == message.conversationid %}
+                                        <div class="mb-3">
+                                            <label class="form-label">
+                                                <strong>{{ msg.sender_user.username }}:</strong>
+                                            </label>
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                value="{{ msg.message }}"
+                                                disabled
+                                            >
+                                            <small class="text-muted">{{ msg.messagedate }}</small>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="modal-footer">
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="Type your message here..."
+                                    >
+                                    <button type="button" class="btn btn-primary">Send</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ol>
+            
+            
+        </div>
+    </div> -->
+    <div class="col-7">
+        
+
+<h6>Ongoing Ads:</h6>
+<div style="width: 100%; max-height: 400px; overflow-y: auto; display: block">
+    <table class="table" border-collapse: collapse>
+        <thead class="table-light" style="position: sticky; top: 0; z-index: 1">
+            <tr class="text-center">
+                <th>Campaign Name</th>
+                <th>Category</th>
+                <th>Ad Title</th>
+                <th>Ad Budget</th>
+                <th>Target</th>
+                <th>Progress</th>
+                <th>Requests</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for campaign in campaigns %}
+            {% for ads in campaign.adRequests %}
+            {% if ads.ispublic and not ads.isassigned %}
+            <tr class="text-center">
+                <td>{{campaign.campaignname}}</td>
+                <td>{{campaign.cate.categoryname}}</td>
+                <td>{{ads.adtitle}}</td>
+                <td>{{ads.paymentamount}}</td>
+                <td>{{ads.adtargetreach}}</td>
+                <td>
+                    <div class="progress">
+                        <div
+                            class="progress-bar bg-success"
+                            role="progressbar"
+                            style="width: {{ads.adprogress}}%;"
+                            aria-valuenow="{{ads.adprogress}}"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                        >
+                            {{ads.adprogress}}%
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <button
+                        type="button"
+                        class="btn btn-warning"
+                        data-bs-toggle="modal"
+                        data-bs-target="#request{{ads.adrequestid}}"
+                        data-bs-whatever="@mdo"
+                    >Request</button>
+                    <div
+                    class="modal fade"
+                    id="request{{ads.adrequestid}}"
+                    tabindex="-1"
+                    aria-labelledby="createModalLabel"
+                    aria-hidden="true"
+                >
+                    <div class="modal-dialog">
+                        <div class="modal-content text-start">
+                            <form action="/negotiations" method="POST">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="createModalLabel">New Request</h5>
+                                    <button
+                                        type="button"
+                                        class="btn-close"
+                                        data-bs-dismiss="modal"
+                                        aria-label="Close"
+                                    ></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row g-3">
+                                        <input type="hidden" name="adrequestid" value="{{ ads.adrequestid }}">
+                                        <div class="col-md-4">
+                                            <label for="negotiationtitle" class="form-label">Ad Id</label>
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                id="adrequestid"
+                                                name="adreq"
+                                                value={{ads.adrequestid}}
+                                                disabled
+                                            >
+                                        </div>
+                                        <div class="col-md-8">
+                                            <label for="negotiationtitle" class="form-label">Ad Title</label>
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                id="adtitle"
+                                                name="adtitle"
+                                                value={{ads.adtitle}}
+                                                disabled
+                                            >
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="adgoal" class="form-label">Requirement</label>
+                                            <textarea
+                                                class="form-control"
+                                                id="adrequirement"
+                                                name="adrequirement"
+                                                rows="3"
+                                            ></textarea>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <label for="campaigngoal" class="form-label">Goal</label>
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                id="adgoal"
+                                                name="adgoal"
+                                            >
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="target" class="form-label">Target</label>
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                id="targetedreach"
+                                                name="adtargetreach"
+                                                value="{{ads.adtargetreach}}"
+                                            >
+                                        </div>
+                                        <div class="col-md-8">
+                                            <label for="campaigntargetaudience" class="form-label">Influencer</label>
+                                            <select id="inputState" class="form-select" name="influencerid">
+                                                <option selected>Select</option>
+                                                {% for influencer in influencerlist %}
+                                                <option value="{{ influencer.influencerid }}">{{ influencer.influencerusername }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="campaignbudget" class="form-label">Budget(₹)</label>
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                id="adbudget"
+                                                name="adbudget"
+                                                value="{{ads.paymentamount}}"
+                                            >
+                                        </div>
+                        
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-warning">Send Request</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+    </div>
+</div>
+{%endblock%}

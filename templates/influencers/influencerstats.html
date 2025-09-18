@@ -1,0 +1,37 @@
+{% extends "./Layouts/base.html" %}
+{% block content %}
+{% include './Layouts/navbar.html' %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="row justify-content-center mt-4">
+            <div class="col-4 text-center">
+                <h4>Average Budget per Campaign(₹)</h4>
+                <h2>{{ averagebudget }}</h2>
+            </div>
+    
+            <div class="col-4 text-center">
+                <h4>Total Number of Ad Requests</h4>
+                <h2>{{ totalads }}</h2>
+            </div>
+            <div class="col-4 text-center">
+                <h4>Total Earnings Across Campaigns(₹)</h4>
+                <h2>{{ totalearn }}</h2>
+            </div>            
+        </div>
+        <br><br><br><br><br><br>
+        <div class="col-4">
+            <img src="{{url_for('static', filename='/img/graphs/graph1.jpg')}}" alt="" class="img-fluid">
+        </div>
+
+        <div class="col-4">
+            <img src="{{url_for('static', filename='/img/graphs/graph2.jpg')}}" alt="" class="img-fluid">
+        </div>
+        
+        <div class="col-4">
+            <img src="{{url_for('static', filename='/img/graphs/graph3.jpg')}}" alt="" class="img-fluid">
+        </div>
+    </div>
+</div>
+
+{% endblock %}

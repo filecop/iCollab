@@ -1,0 +1,134 @@
+{% extends "./Layouts/base.html" %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+{% include './Layouts/navbar.html' %}
+<br>
+<div class="row">
+  <div class="col-4">
+        <div class="col-1"></div>
+        <div class="col-10">
+            <form action="/campaigns/edit/{{campaign.campaignid}}" method="POST">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createModalLabel">Campaign Details:</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="campaigntitle" class="form-label">Campaign Title</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="campaigntitle"
+                                name="campaigntitle"
+                                value="{{campaign.campaignname}}"
+                            >
+                        </div>
+                        <div class="col-md-6">
+                            <label for="campaignenddate" class="form-label">End Date</label>
+                            <input
+                                type="date"
+                                class="form-control"
+                                id="campaignenddate"
+                                name="campaignenddate"
+                                value="{{campaign.campaignenddate}}"
+                            >
+                        </div>
+                        <div class="col-12">
+                            <label for="campaigndescription" class="form-label">Description</label>
+                            <textarea
+                                class="form-control"
+                                id="campaigndescription"
+                                name="campaigndescription"
+                                rows="3"
+                            >{{campaign.campaigndescription}}</textarea>
+                        </div>
+                        <div class="col-md-7">
+                            <label for="campaigngoal" class="form-label">Goal</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="campaigngoal"
+                                name="campaigngoal"
+                                value="{{campaign.campaigngoals}}"
+                            >
+                        </div>
+                        <div class="col-md-5">
+                            <label for="campaigngoal" class="form-label">Target</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="campaigntarget"
+                                name="campaigngoal"
+                                value="{{campaign.campaigntargetreach}}"
+                            >
+                        </div>
+                        <div class="col-md-8">
+                            <label for="campaigntargetaudience" class="form-label">Category</label>
+                            <select id="inputState" class="form-select" name="campaigntargetaudience">
+                                <option>Select</option>
+                                {% for category in categorylist %}
+                                    <option value="{{ category.categoryid }}" 
+                                        {% if category.categoryid == campaign.campaigntargetaudience %}selected{% endif %}>
+                                        {{ category.categoryname }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="campaignbudget" class="form-label">Budget(₹)</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="campaignbudget"
+                                name="campaignbudget"
+                                value="{{campaign.campaignbudget}}"
+                            >
+                        </div>
+                        <div class="col-4">
+                            <div class="form-check">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    id="gridCheck"
+                                    name="campaignvisibility"
+                                    value="True"
+                                    {% if campaign.ispublic %}checked{% endif %}
+                                    disabled
+                                >
+                                <label class="form-check-label" for="gridCheck">
+                                    Public
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-check">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    id="gridCheck"
+                                    name="iscampaignblacklisted"
+                                    value="True"
+                                    {% if campaign.iscampaignblacklisted %}checked{% endif %}
+                                    disabled
+                                >
+                                <label class="form-check-label" for="gridCheck">
+                                    Blacklisted
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+              </form>
+              <div class="d-flex justify-content-center align-items-center">
+                <a class="btn btn-success" href="/campaigns" role="button">Go Back</a>
+              </div>
+
+              </div>
+        <div class="col-1"></div>
+    </div>
+<div class="col-8">
+    {% include './adrequests.html' %}
+</div>
+</div>
+{% endblock %}

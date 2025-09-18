@@ -1,0 +1,304 @@
+{% extends "./Layouts/base.html" %}
+{% block content %}
+
+{% block title %}{% endblock %}
+{% include './Layouts/navbar.html' %}
+{% if existingcampaigns %}
+<div class="row" style="margin-left:1px">
+{% for campaign in existingcampaigns %}
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+      <h5 class="card-title">{{campaign.campaignname}}</h5>
+      <h6 class="card-subtitle mb-2 text-muted">{{campaign.campaignenddate}}</h6>
+      <p class="card-text">{{campaign.campaigndescription}}</p>
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{campaign.id}}" data-bs-whatever="@mdo">Edit</button>
+      
+      <!-- Edit Modal -->
+      <div class="modal fade" id="editModal{{campaign.id}}" tabindex="-1" aria-labelledby="editModalLabel{{campaign.id}}" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="editModalLabel{{campaign.id}}">Edit campaign</h5>
+            </div>
+            <div class="modal-body">
+              <form action="/campaigns" method="POST">
+                <div class="mb-3">
+                  <label for="recipient-name" class="col-form-label">Title:</label>
+                  <input type="text" name="campaigntitle" class="form-control" id="recipient-name" value="{{campaign.campaignname}}">
+                </div>
+                <div class="mb-3">
+                  <label for="campaign-end-date" class="col-form-label">Campaign End Date:</label>
+                  <input type="text" name="campaignenddate" class="form-control" id="campaign-end-date" value="{{campaign.campaignenddate}}">
+                </div>
+                <div class="mb-3">
+                  <label for="campaign-budget" class="col-form-label">Budget:</label>
+                  <input type="text" name="campaignbudget" class="form-control" id="campaign-budget" value="{{campaign.campaignbudget}}">
+                </div>
+                <div class="mb-3">
+                  <label for="campaign-target-audience" class="col-form-label">Target Industry:</label>
+                  <select class="form-select" aria-label="" name="campaigntargetaudience">
+                    <option selected>{{'None'}}</option>
+                    {% for ind in industries %}
+                    <option value="{{ind.index}}" {% if ind.index == campaign.targetaudience %}selected{% endif %}>{{ind.industryname}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="message-text" class="col-form-label">Description:</label>
+                  <textarea class="form-control" name="campaigndescription" id="message-text">{{campaign.campaigndescription}}</textarea>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" href="/campaigns" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteModal{{campaign.id}}" data-bs-whatever="@mdo">Delete</button>
+      
+      <!-- Delete Modal -->
+      <div class="modal fade" id="deleteModal{{campaign.id}}" tabindex="-1" aria-labelledby="deleteModalLabel{{campaign.id}}" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="deleteModalLabel{{campaign.id}}">Delete campaign</h5>
+            </div>
+            <div class="modal-body">
+              <p>Are you sure you want to delete the campaign {{campaign.campaignname}}?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <form action="/campaigns/delete" method="POST">
+                <input type="hidden" name="campaignid" value="{{campaign.id}}">
+                <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+</div>
+<button type="button" href="/campaigns" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#createModal" data-bs-whatever="@mdo">Create Campaign</button>
+
+<!-- Create Modal -->
+<form action="/campaigns" method="POST">
+  <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="createModalLabel">New campaign</h5>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="new-recipient-name" class="col-form-label">Title:</label>
+            <input type="text" name="campaigntitle" class="form-control" id="new-recipient-name">
+          </div>
+          <div class="mb-3">
+            <label for="new-campaign-end-date" class="col-form-label">Campaign End Date:</label>
+            <input type="text" name="campaignenddate" class="form-control" id="new-campaign-end-date">
+          </div>
+          <div class="mb-3">
+            <label for="new-campaign-budget" class="col-form-label">Budget:</label>
+            <input type="text" name="campaignbudget" class="form-control" id="new-campaign-budget">
+          </div>
+          <div class="mb-3">
+            <label for="new-campaign-target-audience" class="col-form-label">Target Industry:</label>
+            <select class="form-select" aria-label="" name="campaigntargetaudience">
+              <option selected>{{'None'}}</option>
+              {% for ind in industries %}
+              <option value="{{ind.index}}">{{ind.industryname}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="new-message-text" class="col-form-label">Description:</label>
+            <textarea class="form-control" name="campaigndescription" id="new-message-text"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <div class="card" style="width: 18rem;">
+    <div class="card-body">
+      <h5 class="card-title">{{campaign.campaignname}}</h5>
+      <h6 class="card-subtitle mb-2 text-muted">{{campaign.campaignenddate}}</h6>
+      <p class="card-text">{{campaign.campaigndescription}}</p>
+      <button type="button" href="/campaigns" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="editModal" data-bs-whatever="@mdo">Edit</button>
+      <form action="/campaigns" method="POST">
+        <div class="modal fade" id="editmodal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit campaign</h5>
+            </div>
+            <div class="modal-body">
+                <form>
+                <div class="mb-3">
+                    <label for="recipient-name" class="col-form-label">Title:</label>
+                    <input type="text" name='campaigntitle'class="form-control" id="recipient-name" value="{{campaign.campaignname}}">
+                </div>
+                <div class="mb-3">
+                    <label for="recipient-name" class="col-form-label">Campign End Date:</label>
+                    <input type="text" name='campaignenddate'class="form-control" id="recipient-name">
+                </div>
+                <div class="mb-3">
+                    <label for="recipient-name" class="col-form-label">Budget:</label>
+                    <input type="text" name='campaignbudget'class="form-control" id="recipient-name">
+                </div>
+                <div class="mb-3">
+                    <label for="recipient-name" class="col-form-label">Target Industry:</label>
+                    <select class="form-select" aria-label="" name="campaigntargetaudience">
+                        <option selected>{{'None'}}</option>
+                        {% for ind in industries%}
+                        <option value="{{ind.index}}">{{ind.industryname}}</option>
+                        {% endfor %}
+                      </select>
+                </div>
+                <div class="mb-3">
+                    <label for="message-text"  class="col-form-label">Description:</label>
+                    <textarea class="form-control" name="campaigndescription" id="message-text"></textarea>
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+            </div>
+        </div>
+        </div>
+    </form>
+      <button type="button" href="/campaigns" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Delete</button>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+</div>
+<button type="button" href="/campaigns" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Create Campaign</button>
+<form action="/campaigns" method="POST">
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">New campaign</h5>
+        </div>
+        <div class="modal-body">
+            <form>
+            <div class="mb-3">
+                <label for="recipient-name" class="col-form-label">Title:</label>
+                <input type="text" name='campaigntitle'class="form-control" id="recipient-name">
+            </div>
+            <div class="mb-3">
+                <label for="recipient-name" class="col-form-label">Campign End Date:</label>
+                <input type="text" name='campaignenddate'class="form-control" id="recipient-name">
+            </div>
+            <div class="mb-3">
+                <label for="recipient-name" class="col-form-label">Budget:</label>
+                <input type="text" name='campaignbudget'class="form-control" id="recipient-name">
+            </div>
+            <div class="mb-3">
+                <label for="recipient-name" class="col-form-label">Target Industry:</label>
+                <select class="form-select" aria-label="" name="campaigntargetaudience">
+                    <option selected>{{'None'}}</option>
+                    {% for ind in industries%}
+                    <option value="{{ind.index}}">{{ind.industryname}}</option>
+                    {% endfor %}
+                  </select>
+            </div>
+            <div class="mb-3">
+                <label for="message-text"  class="col-form-label">Description:</label>
+                <textarea class="form-control" name="campaigndescription" id="message-text"></textarea>
+            </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+        </div>
+    </div>
+    </div>
+</form>
+
+{% endblock %} -->

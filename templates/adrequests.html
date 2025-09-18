@@ -1,0 +1,285 @@
+<div class="row">
+    <h5>Existing Ads for this Campaign:</h5>
+    <div style="width: 100%; max-height: 400px; overflow-y: auto; display: block;">
+        <table class="table" border-collapse: collapse>
+            <thead class="table-light" style="position: sticky; top: 0; z-index: 1;">
+                <tr class="text-center">
+                    <th>
+                        Ad Title
+                    </th>
+                    <th>
+                        Budget(₹)
+                    </th>
+                    <th>
+                        Target
+                    </th>
+                    <th>
+                        Progress
+                    </th>
+                    <th>
+                        Public
+                    </th>
+                    <th>
+                        Assigned
+                    </th>
+                    <th>
+                        Edit
+                    </th>
+                    <th>
+                        Delete
+                    </th>
+                    <th>
+                        Blacklisted
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ad in ads %}
+                <tr class="text-center vertical-align: middle;">
+                    <td>{{ad.adtitle}}</td>
+                    <td>{{ad.paymentamount}}</td>
+                    <td>{{ad.adtargetreach}}</td>
+                    <td>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" role="progressbar" style="width:{{ ad.adprogress }}%;"
+                                aria-valuenow="{{ad.adprogress}}" aria-valuemin="0" aria-valuemax="100">
+                                {{ad.adprogress}}%
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-check form-switch" style="display: flex; justify-content: center;">
+                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" {% if
+                                ad.ispublic %}checked{% endif %}>
+                            <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-check form-switch" style="display: flex; justify-content: center;">
+                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" {% if
+                                ad.isassigned %}checked{% endif %} disabled>
+                            <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                        </div>
+                    </td>
+
+                    <td><button type="button" class="btn btn-success" data-bs-toggle="modal"
+                            data-bs-target="#modifyadd{{ad.adrequestid}}" data-bs-whatever="@mdo">Edit</button>
+                        <div class="modal fade" id="modifyadd{{ad.adrequestid}}" tabindex="-1"
+                            aria-labelledby="createModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <form class="row g-3"
+                                        action="/modifyad/{{userinfo.userid}}/{{ad.campaignid}}/{{ad.adrequestid}}"
+                                        method="POST">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="createModalLabel">Modify Ad</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row g-3">
+                                                <div class="col-md-6">
+                                                    <label for="adtitle" class="form-label">Campaign Name</label>
+                                                    <input type="text" class="form-control" id="adtitle" name="adtitle"
+                                                        value="{{campaign.campaignname}}" disabled>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="adtitle" class="form-label">Ad Title</label>
+                                                    <input type="text" class="form-control" id="adtitle" name="adtitle"
+                                                        value={{ad.adtitle}}>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label for="Requirements" class="form-label">Requirement</label>
+                                                    <textarea class="form-control" id="Requirements" name="Requirements"
+                                                        rows="3">{{ad.requirements}}</textarea>
+                                                </div>
+                                                <div class="col-md-5">
+                                                    <label for="campaigntargetaudience"
+                                                        class="form-label">Category</label>
+                                                    <select id="inputState" class="form-select"
+                                                        name="campaigntargetaudience">
+                                                        <option>Select</option>
+                                                        {% for category in categorylist %}
+                                                        <option value="{{ category.categoryid }}" {% if
+                                                            category.categoryid==campaign.campaigntargetaudience
+                                                            %}selected{% endif %}>
+                                                            {{ category.categoryname }}
+                                                        </option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-5">
+                                                    <label for="campaigntargetaudience" class="form-label">Niche</label>
+                                                    <select id="inputState" class="form-select" name="adniche">
+                                                        <option>Select</option>
+                                                        {% for niche in nichelist %}
+                                                        <option value="{{ niche.nicheid }}" {% if
+                                                            niche.nicheid==niche.nichename %}selected{% endif %}>
+                                                            {{ niche.nichename }}
+                                                        </option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                    <label for="targetreach" class="form-label">Views Target</label>
+                                                    <input type="text" class="form-control" id="targetreach"
+                                                        name="targetreach" value="{{ad.adtargetreach}}">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label for="paymentamount" class="form-label">Amount
+                                                        Payable(₹)</label>
+                                                    <input type="text" class="form-control" id="paymentamount"
+                                                        name="paymentamount" value="{{ad.paymentamount}}">
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="gridCheck"
+                                                            name="advisibility" value="True" {%if
+                                                            ad.ispublic%}checked{%endif%}>
+                                                        <label class="form-check-label" for="gridCheck"
+                                                            style="display: flex; justify-content: left">
+                                                            Public
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary">Save</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+    </div>
+
+    </td>
+    <td> <button type="button" href="" class="btn btn-danger" data-bs-toggle="modal"
+            data-bs-target="#deleteModal{{ad.adrequestid}}" data-bs-whatever="@mdo">Delete</button>
+        <div class="modal fade" id="deleteModal{{ad.adrequestid}}" tabindex="-1"
+            aria-labelledby="deleteModal{{ad.adrequestid}}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModal{{ad.adrequestid}}">Delete Ad</h5>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete the ad {{ad.adtitle}}?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <form action="/ad/delete/{{ad.campaignid}}/{{ad.adrequestid}}" method="POST">
+                            <input type="hidden" name="campaignid" value="{{ad.adrequestid}}">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+</td>
+<td>
+    <div class="form-check form-switch" style="display: flex; justify-content: center;">
+        <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" {% if ad.isflagged %}checked{% endif
+            %} disabled>
+        <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+    </div>
+</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+
+</div>
+<div class="row">
+
+</div>
+
+
+
+<div class="col-1"></div>
+<div class="d-flex justify-content-center align-items-center col=6">
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createAddNew"
+        data-bs-whatever="@mdo">Create Add</button>
+    <div class="modal fade" id="createAddNew" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="/createad/{{userinfo.userid}}/{{campaign.campaignid}}" method="POST">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createModalLabel">Create Ad</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="adtitle" class="form-label">Campaign Name</label>
+                                <input type="text" class="form-control" id="adtitle" name="adtitle"
+                                    value="{{campaign.campaignname}}" disabled>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="adtitle" class="form-label">Ad Title</label>
+                                <input type="text" class="form-control" id="adtitle" name="adtitle" value="">
+                            </div>
+                            <div class="col-12">
+                                <label for="Requirements" class="form-label">Requirement</label>
+                                <textarea class="form-control" id="Requirements" name="Requirements"
+                                    rows="3"></textarea>
+                            </div>
+                            <div class="col-md-5">
+                                <label for="campaigntargetaudience" class="form-label">Category</label>
+                                <select id="inputState" class="form-select" name="campaigntargetaudience">
+                                    <option>Select</option>
+                                    {% for category in categorylist %}
+                                    <option value="{{ category.categoryid }}" {% if
+                                        category.categoryid==campaign.campaigntargetaudience %}selected{% endif %}>
+                                        {{ category.categoryname }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-5">
+                                <label for="campaigntargetaudience" class="form-label">Niche</label>
+                                <select id="inputState" class="form-select" name="adniche">
+                                    <option>Select</option>
+                                    {% for niche in nichelist %}
+                                    <option value="{{ niche.nicheid }}" {% if niche.nicheid==niche.nichename
+                                        %}selected{% endif %}>
+                                        {{ niche.nichename }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="targetreach" class="form-label">Views Target</label>
+                                <input type="text" class="form-control" id="targetreach" name="targetreach">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="paymentamount" class="form-label">Amount Payable(₹)</label>
+                                <input type="text" class="form-control" id="paymentamount" name="paymentamount">
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="gridCheck" name="advisibility"
+                                        value="True">
+                                    <label class="form-check-label" for="gridCheck">
+                                        Public
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Publish</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-1"></div>

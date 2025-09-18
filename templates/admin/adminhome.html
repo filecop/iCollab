@@ -1,0 +1,218 @@
+{% extends "./Layouts/base.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+{% include './Layouts/navbar.html' %}
+<br>
+<h6>Active Campaigns:</h6>
+<div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+    <table class="table table-bordered table-striped">
+        <thead class="table-light" style="position: sticky; top: 0; z-index: 1;">
+            <tr class="text-center">
+                <th>Campaign Name</th>
+                <th>Expiring On</th>
+                <th>Category</th>
+                <th>Budget</th>
+                <th>Target</th>
+                <th>Progress</th>
+                <th>Public</th>
+                <th>Flagged</th>
+                <th>Blacklisted</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for campaign in campaigns %}
+            <tr class="text-center">
+                <td>{{ campaign.campaignname }}</td>
+                <td>{{ campaign.campaignenddate }}</td>
+                <td>{{ campaign.cate.categoryname }}</td>
+                <td>{{ campaign.campaignbudget }}</td>
+                <td>{{ campaign.campaigntargetreach }}</td>
+                <td>
+                    <div class="progress">
+                        <div class="progress-bar bg-success" role="progressbar"
+                            style="width:{{ campaign.campaignprogress }}%;"
+                            aria-valuenow="{{ campaign.campaignprogress }}" aria-valuemin="0" aria-valuemax="100">
+                            {{ campaign.campaignprogress }}%
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-check form-switch d-flex justify-content-center">
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" {% if
+                            campaign.ispublic %} checked {% endif %}>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-check form-switch d-flex justify-content-center">
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" {% if
+                            campaign.iscampaignflagged %}checked{% endif %}>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-check form-switch d-flex justify-content-center">
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" {% if
+                            campaign.iscampaignblacklisted %}checked{% endif %}>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-warning" data-bs-toggle="modal"
+                        data-bs-target="#campaign{{campaign.campaignid}}" data-bs-whatever="@mdo">Take Action</button>
+
+                    <div class="modal fade" id="campaign{{campaign.campaignid}}" tabindex="-1"
+                        aria-labelledby="createModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content text-start">
+                                <form action="/admin/flag/campaign" method="POST">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="createModalLabel">Actions</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input type="hidden" name="campaignid" value="{{ campaign.campaignid }}">
+                                        <div class="col-12">
+                                            <label for="campaigntitle" class="form-label">Campaign Id</label>
+                                            <input type="text" class="form-control" id="campaignid" name="campaignid"
+                                                value="{{ campaign.campaignid }}" disabled>
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="campaignaction" class="form-label">Select Action</label>
+                                            <select id="campaignaction" class="form-select" name="action">
+                                                <option value="Removeflag">Remove Flag</option>
+                                                <option value="blacklist">Blacklist</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="reason" class="form-label">Reason</label>
+                                            <textarea class="form-control" id="reason" name="reason"
+                                                rows="3">{{campaign.reportreason}}</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-warning">Take Action</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<br>
+<h6>Running Ads</h6>
+<div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+    <table class="table table-bordered table-striped">
+        <thead class="table-light" style="position: sticky; top: 0; z-index: 1;">
+            <tr class="text-center">
+                <th>Ad Title</th>
+                <th>Campaign ID</th>
+                <th>Influencer ID</th>
+                <!-- <th>Requirements</th> -->
+                <th>Budget</th>
+                <th>Ad Progress</th>
+                <th>Views Target</th>
+                <th>Active</th>
+                <th>Public</th>
+                <th>Flagged</th>
+                <th>Blacklisted</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ad in ads %}
+            <tr class="text-center">
+                <td>{{ ad.adtitle }}</td>
+                <td>{{ ad.campaignid }}</td>
+                <td>{{ ad.influencerid }}</td>
+                <!-- <td>{{ ad.requirements }}</td> -->
+                <td>{{ ad.paymentamount }}</td>
+                <td>{{ ad.adtargetreach }}</td>
+                <td>
+                    <div class="progress">
+                        <div class="progress-bar bg-success" role="progressbar" style="width:{{ ad.adprogress }}%;"
+                            aria-valuenow="{{ ad.adprogress }}" aria-valuemin="0" aria-valuemax="100">
+                            {{ ad.adprogress }}%
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-check form-switch d-flex justify-content-center">
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" {% if ad.isactive
+                            %}checked{% endif %}>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-check form-switch d-flex justify-content-center">
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" {% if ad.ispublic
+                            %}checked{% endif %}>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-check form-switch d-flex justify-content-center">
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" {% if ad.isflagged
+                            %}checked{% endif %}>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-check form-switch d-flex justify-content-center">
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" {% if
+                            ad.isblacklisted %}checked{% endif %} disabled>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-warning" data-bs-toggle="modal"
+                        data-bs-target="#adrequest{{ad.adrequestid}}" data-bs-whatever="@mdo">Take Action</button>
+
+                    <div class="modal fade" id="adrequest{{ad.adrequestid}}" tabindex="-1"
+                        aria-labelledby="createModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content text-start">
+                                <form action="/admin/flag/ad" method="POST">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="createModalLabel">Action</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input type="hidden" name="adrequestid" value="{{ ad.adrequestid }}">
+                                        <div class="col-12">
+                                            <label for="adaction" class="form-label">Select Action</label>
+                                            <select id="adaction" class="form-select" name="action">
+                                                <option value="remove_flag">Remove Flag</option>
+                                                <option value="blacklist">Blacklist</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="reason" class="form-label">Reason</label>
+                                            <textarea class="form-control" id="reason" name="reason"
+                                                rows="3">{{ad.reportreason}}</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-warning">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<br>
+
+{% endblock %}

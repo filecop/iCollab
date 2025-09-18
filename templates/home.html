@@ -1,0 +1,11 @@
+{% extends "./Layouts/base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+{% include './Layouts/navbar.html' %}
+
+<h1>Welcome {{userinfo.username}}</h1>
+<h1>Welcome {{"userinfo.campaign[0].campaignname"}}</h1>
+
+  
+{% endblock %}

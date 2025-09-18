@@ -1,0 +1,56 @@
+{% extends "./Layouts/base.html" %} {% block title %}Profile{% endblock %} {%
+block content %} {% include './Layouts/navbar.html' %}
+<br>
+<h4>Active Campaigns:</h4>
+<div style="width: 100%; max-height: 400px; overflow-y: auto; display: block">
+    <table class="table" border-collapse: collapse>
+        <thead class="table-light" style="position: sticky; top: 0; z-index: 1">
+            <tr class="text-center">
+                <th>Campaign Name</th>
+                <th>Expiring On</th>
+                <th>Category</th>
+                <th>Budget</th>
+                <th>Target</th>
+                <th>Progress</th>
+                <th>Public</th>
+                <th>Blacklisted</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for campaigns in campaigns %}
+            <tr class="text-center">
+                <td>{{campaigns.campaignname}}</td>
+                <td>{{campaigns.campaignenddate}}</td>
+                <td>{{campaigns.cate.categoryname}}
+                <td>{{campaigns.campaignbudget}}</td>
+                <td>{{campaigns.campaigntargetreach}}</td>
+                <td>
+                    <div class="progress">
+                        <div
+                            class="progress-bar bg-success"
+                            role="progressbar"
+                            style="width:{{ campaigns.campaignprogress }}%;"
+                            aria-valuenow="{{campaigns.campaignprogress}}"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                        >
+                            {{campaigns.campaignprogress}}%
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-check form-switch d-flex justify-content-center">
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" {% if campaigns.campaignvisibility != "Private" %} checked {% endif %}>
+                    </div>
+                </td>
+                <td>{{campaigns.iscampaignblacklisted}}</td>
+                <td>{{"Some Action"}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<br>
+
+{% endblock %}

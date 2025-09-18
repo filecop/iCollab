@@ -1,0 +1,186 @@
+{% extends "./Layouts/base.html" %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+{% include './Layouts/navbar.html' %}
+<p></p>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-2">
+            <!-- <h5>Selected</h5> -->
+            <div style="width: 100%; max-height: 400px; overflow-y: auto; display: block;">
+                <table class="table" style="border-collapse: collapse;">
+                    <thead class="table-light" style="position: sticky; top: 0; z-index: 1;">
+                        <tr class="text-center">
+                            <th>Shortlisted</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for influencer in myinfluencers %}
+                        <tr class="text-center">
+                            <td> <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#message{{influencer.influencerusername}}" data-bs-whatever="@{{influencer.influencerusername}}">{{influencer.myinfluencerid}}</button>
+                                <div class="modal fade" id="message{{influencer.influencerusername}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content text-start">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form>
+                                                    <div class="mb-3">
+                                                        <label for="recipient-name" class="col-form-label">Recipient:</label>
+                                                        <input type="text" class="form-control" id="recipient-name" value="{{influencer.influencerusername}}">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="message-text" class="col-form-label">Message:</label>
+                                                        <textarea class="form-control" id="message-text" rows="4"></textarea> 
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-primary">Send message</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div class="col-10">
+            <div class="row mb-3">
+                <form class="d-flex ms-auto" style="width: 300px" action="/find">
+                    <input
+                        class="form-control me-2"
+                        type="search"
+                        placeholder="Search"
+                        aria-label="Search"
+                        name="influencersearch"
+                    >
+                    <button class="btn btn-warning" type="submit">Search</button>
+                </form>
+            </div>
+            {% if influencerlist %}
+            <!-- <h5>Influencers:</h5> -->
+            <div style="width: 100%; max-height: 400px; overflow-y: auto; display: block;">
+                <table class="table" style="border-collapse: collapse;">
+                    <thead class="table-light" style="position: sticky; top: 0; z-index: 1;">
+                        <tr class="text-center">
+                            <th>Username</th>
+                            <th>Category</th>
+                            <th>Niche</th>
+                            <th>Reach</th>
+                            <th>Profile</th>
+                            <th>Send Message</th>
+                            <th>Add to Favourites</th>
+                            <th>Report</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for influencer in influencerlist %}
+                        <tr class="text-center">
+                            <td>{{influencer.influencerusername}}</td>
+                            <td>{{influencer.influencercategory}}</td>
+                            <td>{{influencer.influencerniche}}</td>
+                            <td>{{influencer.influencerreach}}</td>
+                            <td>
+                                <button
+                                    type="button"
+                                    class="btn btn-info"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#profile{{influencer.influencerid}}"
+                                    data-bs-whatever="@mdo"
+                                >View Profile</button>
+                                <div
+                                    class="modal fade"
+                                    id="profile{{influencer.influencerid}}"
+                                    tabindex="-1"
+                                    aria-labelledby="createModalLabel"
+                                    aria-hidden="true"
+                                >
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button
+                                                    type="button"
+                                                    class="btn-close"
+                                                    data-bs-dismiss="modal"
+                                                    aria-label="Close"
+                                                ></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row g-3">
+                                                    <div class="row g-0">
+                                                        <div class="col-md-4">
+                                                            <img src="./static/img/img.png" class="img-fluid rounded-start" alt="...">
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <div class="card-body">
+                                                                <h5 class="card-title">{{influencer.influencerusername}}</h5>
+                                                                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                                                <p class="card-text">
+                                                                    <span class="badge rounded-pill bg-primary">{{"Facebook"}}</span>
+                                                                    <span class="badge rounded-pill bg-warning">{{"Instagram"}}</span>
+                                                                    <span class="badge rounded-pill bg-danger">{{"Youtube"}}</span>
+                                                                </p>
+                                                                <small class="text-muted">Last updated 3 mins ago</small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-success" data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#message{{influencer.influencerusername}}" data-bs-whatever="@{{influencer.influencerusername}}">Message</button>
+                                <div class="modal fade" id="message{{influencer.influencerusername}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content text-start">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form>
+                                                    <div class="mb-3">
+                                                        <label for="recipient-name" class="col-form-label">Recipient:</label>
+                                                        <input type="text" class="form-control" id="recipient-name" value="{{influencer.influencerusername}}">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="message-text" class="col-form-label">Message:</label>
+                                                        <textarea class="form-control" id="message-text" rows="4"></textarea> 
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-primary">Send message</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><a class="btn btn-success" href="/find/addinfluencer/{{influencer.influencerusername}}" role="button">Add Influencer</a></td>
+                            <td><a class="btn btn-danger" href="/find/report/{{influencer.influencerid}}" role="button">Report</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

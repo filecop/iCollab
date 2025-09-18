@@ -1,0 +1,18 @@
+{% extends "./Layouts/base.html" %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+{% include './Layouts/navbar.html' %}
+
+
+<br><br>
+<h6>Something went wrong</h6>
+Please try again later.
+
+If you have have not registered yet. Please register as influencer or sponsor first.
+
+<a class="btn btn-warning" href="/influencer/register" role="button">Influencer Register</a>
+
+<a class="btn btn-warning" href="/sponsor/register" role="button">Sponsor Register</a>
+
+{% endblock %}

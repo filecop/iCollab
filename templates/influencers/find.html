@@ -1,0 +1,125 @@
+{% extends "./Layouts/base.html" %}
+{% block title %}AdRequest Search{% endblock %}
+{% block content %}
+{% include './Layouts/navbar.html' %}
+<p></p>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-7">
+            {% if ads %}
+            <h6>Ongoing Ads:</h6>
+            <div style="width: 100%; max-height: 400px; overflow-y: auto; display: block">
+                <table class="table" border-collapse: collapse>
+                    <thead class="table-light" style="position: sticky; top: 0; z-index: 1">
+                        <tr class="text-center">
+                            <th>Ad Title</th>
+                            <th>Category</th>
+                            <th>Requirements</th>
+                            <th>Budget</th>
+                            <th>Target</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ads in ads %}
+                        {% if ads.ispublic and not ads.isassigned %}
+                        <tr class="text-center">
+                            <td>{{ads.adtitle}}</td>
+                            <td>{{ads.campaigns.cate.categoryname}}</td>
+                            <td>{{ads.requirements}}</td>
+                            <td>{{ads.paymentamount}}</td>
+                            <td>{{ads.adtargetreach}}</td>
+                            <td>
+                                <button type="button" class="btn btn-warning" data-bs-toggle="modal"
+                                    data-bs-target="#request{{ads.adrequestid}}"
+                                    data-bs-whatever="@mdo">Request</button>
+                                <div class="modal fade" id="request{{ads.adrequestid}}" tabindex="-1"
+                                    aria-labelledby="createModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content text-start">
+                                            <form action="/negotiations/i" method="POST">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="createModalLabel">New Request</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="row g-3">
+                                                        <input type="hidden" name="adrequestid"
+                                                            value="{{ ads.adrequestid }}">
+                                                        <div class="col-md-4">
+                                                            <label for="negotiationtitle" class="form-label">Ad
+                                                                Id</label>
+                                                            <input type="text" class="form-control" id="adrequestid"
+                                                                name="adreq" value="{{ads.adrequestid}}" disabled>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <label for="negotiationtitle" class="form-label">Ad
+                                                                Title</label>
+                                                            <input type="text" class="form-control" id="adtitle"
+                                                                name="adtitle" value="{{ads.adtitle}}" disabled>
+                                                        </div>
+                                                        <div class="col-12">
+                                                            <label for="adgoal" class="form-label">Requirement</label>
+                                                            <textarea class="form-control" id="adrequirement"
+                                                                name="adrequirement" rows="3"></textarea>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <label for="campaigngoal" class="form-label">Goal</label>
+                                                            <input type="text" class="form-control" id="adgoal"
+                                                                name="adgoal">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label for="target" class="form-label">Target</label>
+                                                            <input type="text" class="form-control" id="targetedreach"
+                                                                name="adtargetreach" value="{{ads.adtargetreach}}">
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <label for="campaigntargetaudience"
+                                                                class="form-label">Sponsor</label>
+                                                            <select id="inputState" class="form-select"
+                                                                name="sponsorid">
+                                                                <option selected>{{ ads.campaigns.campaigncreatedby }}</option>
+                                                                {% for influencer in influencerlist %}
+                                                                <option value="{{ ads.campaigns.campaigncreatedby }}">{{
+                                                                    influencer.influencerusername }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label for="campaignbudget"
+                                                                class="form-label">Budget(₹)</label>
+                                                            <input type="text" class="form-control" id="adbudget"
+                                                                name="adbudget" value="{{ads.paymentamount}}">
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-warning">Send Request</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %} <h6>No New Ads, Search!!!</h6>{% endif %}
+        </div>
+        <div class="col-5">
+            <form class="d-flex ms-auto" style="width: 300px" action="/find/i" method="get">
+                <input class="form-control me-2" type="search" placeholder="Ad Title" aria-label="Search" name="title">
+                <input class="form-control me-2" type="search" placeholder="Budget >=" aria-label="Budget" name="budget">
+                <button class="btn btn-warning" type="submit">Search</button>
+            </form>            
+        </div>
+    </div>
+</div>
+{% endblock %}

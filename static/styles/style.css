@@ -1,0 +1,52 @@
+* {
+    margin: 0px;
+}
+
+#container {
+    border: 1px solid rgba(1, 0, 5, 0.765);
+    margin-top: 2px;
+    margin-bottom: 40px;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    background-color: #d9edc5;
+}
+
+#panel {
+    border: 1px solid #d9edc5;
+    background-color: #c7d8f0;
+    width: 500px;
+    padding: 20px;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    text-align: center; /* Center the content inside the panel */
+}
+
+#input-form form {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-label {
+    text-align: left;
+}
+
+#input-form form .btn-primary {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#panel2{
+    border: 1px solid rgb(28, 58, 227);
+    background-color: #c7d8f0;
+    width: 500px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    text-align: center; /* Center the content inside the panel */
+}
